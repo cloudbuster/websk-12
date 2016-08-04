@@ -1,5 +1,5 @@
 // Creating module myApp, which can be called with ng-app="myApp" in the view (index.html)
-var myApp = angular.module('myApp', ['ngRoute', 'ngResource']);
+var myApp = angular.module('myApp', ['ngRoute']);
 
 // Configuring routing with routeprovider service
 myApp.config(function($routeProvider){
@@ -133,16 +133,27 @@ myApp.controller('mainController', function($scope){
 myApp.controller('templateFormController', function($scope, $log, $location, tempStorageService){
   $scope.title = 'Register to ROCK!';
   $scope.register = function(){
+    // as there is data in service, we'll read it first and add it to localStorage as a whole
+    // this could have been made directly as well, by
+    // var stringifiedJSON += JSON.stringify($scope.reg); // (adding to the existing)
+    // localStorage.setItem('attendees', stringifiedJSON);
     tempStorageService.storageObjArray.push($scope.reg);
+    // localStorage only understands string data thus making it best to stringify the object array
+    // with JSON.stringify. Let's see whether it works or not.
+    localStorage.setItem('attendees', JSON.stringify(tempStorageService.storageObjArray));
+    // location moves user to #templateAttendees, otherwise nothing visible would happen
     $location.path('/templateAttendees');
   };
 });
 
 // The injected tempStorageService.storageObjArray is handed over to $scope.persons 
 // and iterated in the view with ng-route, with custom filters.
-myApp.controller('templateAttendeesController', function($scope, tempStorageService){
+myApp.controller('templateAttendeesController', function($scope, $log, tempStorageService){
   $scope.title = 'These people have registered to ROCK!';
-  $scope.persons = tempStorageService.storageObjArray;
+  // localStorage string needs to be translated into JSON for ng-repeat in the view 
+  $scope.persons = JSON.parse(localStorage.getItem('attendees'));
+  // just to see what localStorage string looks like
+  $log.info(localStorage.getItem('attendees'));
 });
 
 // Just some scopes to be shown for the user at mainTemplate which is controlled by
