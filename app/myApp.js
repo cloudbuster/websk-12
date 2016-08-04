@@ -1,3 +1,7 @@
+(function(){
+  'use strict';
+}());
+
 // Creating module myApp, which can be called with ng-app="myApp" in the view (index.html)
 var myApp = angular.module('myApp', ['ngRoute']);
 
@@ -98,9 +102,9 @@ myApp.service('tempStorageService', function(){
 // Creating custom filter to transform boolean data into user readable words.
 myApp.filter('bool2words', function(){
   return function(x){
-    if (x == true){
+    if (x === true){
       return "Yes!";
-    } else if (x == false){
+    } else if (x === false){
       return "No..."; 
     } else {
       return "No...";
