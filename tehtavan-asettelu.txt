@@ -1,0 +1,62 @@
+Harjoitus12.
+
+Tee harjoitus10:ssä tekemääsi pieneen Angular-sovellukseen datan tallennus HTML5 localstorageen. Huomaa että tallennettava data on JS-olioita jotka ovat taulukon sisällä. Sovellus toimii tämän jälkeen kuten ennenkin, mutta ladattaessa sivu uudelleen tiedot eivät häviä koska ne on varastoitu pysyvään tallennustilaan.
+
+Linkit:
+http://htmldog.com/guides/javascript/advanced/localstorage/
+
+
+HTML Dog
+Skip to navigation
+
+You are here: Home ? Tutorials ? JavaScript ? Advanced ?
+
+Local Storage
+
+When building more complex JavaScript applications that run in a user?s browser
+it?s very useful to be able to store information in the browser, so that the
+information can be shared across different pages and browsing sessions.
+
+In the recent past this would have only been possible with cookies - text files
+saved to a user?s computer - but the way of managing these with JavaScript was
+not good. Now there?s a new technology called local storage that does a similar
+thing, but with an easier-to-use interface.
+
+Unlike cookies, local storage can only be read client-side ? that is, by the
+browser and your JavaScript. If you want to share some data with a server,
+cookies may be a better option.
+
+To save some data, use localStorage.setItem.
+
+localStorage.setItem('name', 'tom');
+
+The first argument is the identifier you?ll later use to get the data out
+again. The second is the data you want to store.
+
+Getting back out again is simple ? just pass the identifier to
+localStorage.getItem.
+
+var name = localStorage.getItem('name');
+
+Siteground WordPress hosting
+
+Local storage can only save strings, so storing objects requires that they be
+turned into strings using JSON.stringify - you can?t ask local storage to store
+an object directly because it?ll store ?[object Object]?, which isn?t right at
+all!
+
+That also means the object must be run through JSON.parse on the way out of
+local storage. You can see this in the example below.
+
+// Object example
+
+localStorage.setItem('user', JSON.stringify({
+    username: 'htmldog',
+    api_key: 'abc123xyz789'
+}));
+
+var user = JSON.parse(localStorage.getItem('user'));
+
+Browser support for local storage is not 100% but it?s pretty good - you can
+expect it to work in all modern browsers, IE 8 and above, and in most mobile
+browsers too.
