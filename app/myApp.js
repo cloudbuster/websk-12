@@ -2,7 +2,7 @@
   'use strict';
 }());
 
-// Creating module myApp, which can be called with ng-app="myApp" in the view (index.html)
+// Creating module myApp, which can be called with ng-app="myApp" in the view (index.php)
 var myApp = angular.module('myApp', ['ngRoute']);
 
 // Configuring routing with routeprovider service
@@ -12,19 +12,19 @@ myApp.config(function($routeProvider){
     // When user clicks on "#templateForm" in the view, url bind to a controller opens
     // to the view.
     .when('/templateForm', {
-      templateUrl : './templates/templateForm.html',
+      templateUrl : './templates/templateForm.php',
       controller : 'templateFormController'
     })
 
   .when('/templateAttendees', {
-    templateUrl : './templates/templateAttendees.html',
+    templateUrl : './templates/templateAttendees.php',
     controller : 'templateAttendeesController'
   })
 
   // When user click doesn't match a fallback url and controller will be opened
   // in this case they are also opened when the app is executed ()
   .otherwise( {
-    templateUrl : './templates/mainTemplate.html',
+    templateUrl : './templates/mainTemplate.php',
     controller : 'mainTemplateController'
   });
 });
@@ -34,7 +34,7 @@ myApp.config(function($routeProvider){
 // date is pushed.
 myApp.service('tempStorageService', function(){
   /* Object array to store, add and call data */ 
-  this.storageObjArray = 
+/*  this.storageObjArray = 
     [
     {
       "firstName": "Herkko",
@@ -93,6 +93,7 @@ myApp.service('tempStorageService', function(){
       "sauna": false
     }
   ];
+*/
 
   // Some text that could be on a sole controller, but are here for testing the service.
   this.infoText = "We have an awesome event on 1st of September at Lutakko aukio!";
