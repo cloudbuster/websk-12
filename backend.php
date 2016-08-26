@@ -4,7 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 // Connect and select database (just in case)
-$conn = new mysqli('localhost', 'root', 'root', 'websk21');
+$conn = new mysqli('localhost', 'websk', 'websk1999%', 'websk21');
 $conn->select_db('websk21');
 
 // Check wheter there is data coming from front end

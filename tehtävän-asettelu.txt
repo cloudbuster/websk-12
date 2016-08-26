@@ -1,0 +1,16 @@
+Harjoitus21.
+
+Tee harjoituksen 12. Angular-frontendille PHP-backend jolla tallennetaan ilmoittautuneet henkilöt MySQL-tauluun nimeltään "ilmot" (taulun kuvaus). Henkilöt myös haetaan taulusta ja välitetään JSON-muodossa Angular-frontendiin. Tee PHP-backendiin funktiot yhteydenotosta kantaan, JSON-vastaanotosta kantaan ja JSON-tulostukseen kannasta. Sovellus toimii siis kuten ennenkin, mutta localstoragen sijasta data tallentuu tietokantaan. Ratkaisua voit lähteä hakemaan tämän esimerkin avulla. Saatuasi homman toimimaan, voit koittaa tehdä $http-olion käytön serviceen, eikä suoraan controlleriin.
+
+Taulun kuvaus:
+CREATE TABLE IF NOT EXISTS `ilmot` (
+    `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'laskuri',
+    `nimi` varchar(50) DEFAULT NULL COMMENT 'nimi',
+    `email` varchar(50) DEFAULT NULL COMMENT 'email',
+    `ruoka` varchar(10) DEFAULT NULL COMMENT 'ruokavalinta',
+    `sauna` varchar(5) DEFAULT NULL COMMENT 'saunailta',
+    PRIMARY KEY (`id`)
+
+    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;
+
+
