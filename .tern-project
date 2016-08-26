@@ -1,0 +1,13 @@
+{
+  "libs": [
+    "browser",
+    "underscore",
+    "angular"
+
+  ],
+  "plugins": {
+    "node": {}
+
+  }
+
+}

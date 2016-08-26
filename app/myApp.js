@@ -34,66 +34,6 @@ myApp.config(function($routeProvider){
 // date is pushed.
 myApp.service('tempStorageService', function(){
   /* Object array to store, add and call data */ 
-  this.storageObjArray = 
-    [
-    {
-      "firstName": "Herkko",
-      "lastName": "Makkonen",
-      "email": "makkonen22@gmail.com",
-      "diet": "meat",
-      "sauna": true
-    },
-    {
-      "firstName": "Maija",
-      "lastName": "Maukonen",
-      "email": "maija.maukonen@outlook.com",
-      "diet": "fish",
-      "sauna": true
-    },
-    {
-      "firstName": "Mervi",
-      "lastName": "Laulavainen",
-      "email": "merla@yahoo.com",
-      "diet": "vegetarian",
-      "sauna": false
-    },
-    {
-      "firstName": "Jussi",
-      "lastName": "Turunen",
-      "email": "jussi.turunen@luukku.com",
-      "diet": "meat",
-      "sauna": true
-    },
-    {
-      "firstName": "Günther",
-      "lastName": "Bösebuben",
-      "email": "guenther.boeseboeben@gmx.de",
-      "diet": "fish",
-      "sauna": true
-    },
-    {
-      "firstName": "Erkki",
-      "lastName": "Lasinen",
-      "email": "erkki62@hotmail.com",
-      "diet": "meat",
-      "sauna": false
-    },
-    {
-      "firstName": "Rauli",
-      "lastName": "Hiironen",
-      "email": "rauli-hiironen@gmail.com",
-      "diet": "fish",
-      "sauna": true
-    },
-    {    
-      "firstName": "Paula",
-      "lastName": "Viitaniemi",
-      "email": "paula.viitaniemi@jamk.fi",
-      "diet": "vegetarian",
-      "sauna": false
-    }
-  ];
-
   // Some text that could be on a sole controller, but are here for testing the service.
   this.infoText = "We have an awesome event on 1st of September at Lutakko aukio!";
   this.buttonText = "Go ahead and register!";
@@ -102,9 +42,9 @@ myApp.service('tempStorageService', function(){
 // Creating custom filter to transform boolean data into user readable words.
 myApp.filter('bool2words', function(){
   return function(x){
-    if (x === true){
+    if (x === true || x === 1 || x === '1'){
       return "Yes!";
-    } else if (x === false){
+    } else if (x === false || x=== 0 || x === '0'){
       return "No..."; 
     } else {
       return "No...";
@@ -116,11 +56,15 @@ myApp.filter('bool2words', function(){
 // be all lowercase. 
 myApp.filter('capitalize', function(){
   return function(x){
-    var tempString = x[0].toUpperCase();
-    for (var i = 1; i < x.length; i += 1){
-       tempString += x[i];
+    if (x){
+      this.tempString = x[0].toUpperCase();
+      for (var i = 1; i < x.length; i += 1){
+        this.tempString += x[i];
+      }
+    } else { 
+      this.tempString = 'No Preference';
     }
-    return tempString;
+    return this.tempString;
   };
 });
 
@@ -130,34 +74,42 @@ myApp.controller('mainController', function($scope){
   $scope.title = 'main';
 });
 
-// Controller for form, where user inputs data. register function takes in user input, pushes it
-// to tempStorageService.storageObjArray object array.
-// $location service is used to route user to templateAttendees.
-// There are some controller/template specific messages used as headings ie. $scope.title
-myApp.controller('templateFormController', function($scope, $log, $location, tempStorageService){
+myApp.controller('templateFormController', function($scope, $log, $location, $http){
   $scope.title = 'Register to ROCK!';
+
   $scope.register = function(){
-    // as there is data in service, we'll read it first and add it to localStorage as a whole
-    // this could have been made directly as well, by
-    // var stringifiedJSON += JSON.stringify($scope.reg); // (adding to the existing)
-    // localStorage.setItem('attendees', stringifiedJSON);
-    tempStorageService.storageObjArray.push($scope.reg);
-    // localStorage only understands string data thus making it best to stringify the object array
-    // with JSON.stringify. Let's see whether it works or not.
-    localStorage.setItem('attendees', JSON.stringify(tempStorageService.storageObjArray));
-    // location moves user to #templateAttendees, otherwise nothing visible would happen
+    
+    $http.post('backend.php', 
+        {
+          'firstName':$scope.firstName, 
+          'lastName':$scope.lastName, 
+          'email':$scope.email, 
+          'diet':$scope.diet,
+          'sauna':$scope.sauna
+        }
+        )
+      .then (function successCallback(data, status, headers, config){
+        $log.info('Data inserted.');
+      }, function errorCallback(){
+        $log.info('Error. Data was not inserted.');
+      });
+
     $location.path('/templateAttendees');
   };
 });
 
-// The injected tempStorageService.storageObjArray is handed over to $scope.persons 
-// and iterated in the view with ng-route, with custom filters.
-myApp.controller('templateAttendeesController', function($scope, $log, tempStorageService){
+myApp.controller('templateAttendeesController', function($scope, $log, $http){
   $scope.title = 'These people have registered to ROCK!';
-  // localStorage string needs to be translated into JSON for ng-repeat in the view 
-  $scope.persons = JSON.parse(localStorage.getItem('attendees'));
-  // just to see what localStorage string looks like
-  $log.info(localStorage.getItem('attendees'));
+
+  $scope.users = {};
+
+  $http({ method: 'get', url: 'backend.php'})
+  .then (function successCallback(response){
+    $scope.users = response.data;
+  }, function errorCallback(reason){
+    $log.info('Error' + reason);
+  });
+
 });
 
 // Just some scopes to be shown for the user at mainTemplate which is controlled by
@@ -167,10 +119,3 @@ myApp.controller('mainTemplateController', function($scope, tempStorageService){
   $scope.info = tempStorageService.infoText;
   $scope.btnText = tempStorageService.buttonText;
 });
-
-
-
-
-
-
-
